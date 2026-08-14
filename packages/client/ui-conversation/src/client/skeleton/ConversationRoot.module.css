@@ -336,15 +336,28 @@
   pointer-events: none;
 }
 
+/* The chip row rides the composer's width axis, not the full-bleed message
+   column: the shell mirrors the InputBar's side clearance and the inner row
+   caps at the card's max width, so the chip sits directly above the card
+   (its folder glyph on the card's inner controls below). */
 .heroWorkspaceRow {
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: 0 var(--dsh-composer-side-clearance);
+}
+
+.heroWorkspaceInner {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 2px;
   min-width: 0;
-  margin-top: 4px;
-  /* figma drew px 8; nudged +12 so the chip's folder glyph lines up closer to
-     the card's inner controls below. */
-  padding-left: 20px;
+  width: 100%;
+  max-width: var(--dsh-composer-card-max-width);
+  margin-inline: auto;
+  /* figma 75:8208 drew px 8; the width cap above lands the glyph on the
+     card's inner controls (the card's text starts 16px in). */
+  padding-left: 8px;
 }
 
 /* Hero: the composer sits inside the session scroll body; center there so

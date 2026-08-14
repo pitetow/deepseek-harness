@@ -99,27 +99,29 @@ export function ConversationRoot({
 
   const heroWorkspaceRow = (
     <div className={css.heroWorkspaceRow}>
-      <WorkspaceChip
-        buttonRef={pickerAnchor}
-        label={chipTitle}
-        menuOpen={pickerOpen}
-        onClick={() => { setPickerOpen(open => !open) }}
-        t={t}
-      />
-      {renderSlot('conversation.hero.workspace', {
-        open: pickerOpen,
-        anchorRef: pickerAnchor,
-        selectedId: pendingWorkspaceId ?? sessionWorkspace?.workspaceId,
-        onPick: (workspaceId) => {
-          setPickerOpen(false)
-          setPendingWorkspaceId(workspaceId)
-          void selectWorkspace(workspaceId).catch(() => {
-            setPendingWorkspaceId(current => current === workspaceId ? undefined : current)
-          })
-        },
-        onClose: () => { setPickerOpen(false) },
-      })}
-      {renderSlot('conversation.hero.agentPreset', {})}
+      <div className={css.heroWorkspaceInner}>
+        <WorkspaceChip
+          buttonRef={pickerAnchor}
+          label={chipTitle}
+          menuOpen={pickerOpen}
+          onClick={() => { setPickerOpen(open => !open) }}
+          t={t}
+        />
+        {renderSlot('conversation.hero.workspace', {
+          open: pickerOpen,
+          anchorRef: pickerAnchor,
+          selectedId: pendingWorkspaceId ?? sessionWorkspace?.workspaceId,
+          onPick: (workspaceId) => {
+            setPickerOpen(false)
+            setPendingWorkspaceId(workspaceId)
+            void selectWorkspace(workspaceId).catch(() => {
+              setPendingWorkspaceId(current => current === workspaceId ? undefined : current)
+            })
+          },
+          onClose: () => { setPickerOpen(false) },
+        })}
+        {renderSlot('conversation.hero.agentPreset', {})}
+      </div>
     </div>
   )
 
