@@ -393,14 +393,18 @@ describe('web e2e: input card position across view tabs', () => {
     // The control: without it, equal rectangles could also mean the tab switch
     // never reached the layout. Under the uncompensated cascade the overlay seat
     // loses its `right` compensation and measures the full padding box, so the
-    // card moves by half the band on each edge. Chat's own reservation is
+    // 80%-wide card (ConversationRoot --dsh-composer-card-max-width) grows by
+    // 80% of the unreserved band and re-centres: the left edge moves by the
+    // remaining 10% share and the right edge by 90%. Chat's own reservation is
     // untouched — that is the side that must not change.
     const comparison = await compareTabsWithoutCompensation(page)
     expect(comparison.chat.gutter).toBe('stable')
     expect(comparison.chat.band).toBeGreaterThan(0)
     expect(comparison.trajectory.band).toBe(0)
-    expect(comparison.leftShift).toBe(comparison.chat.band / 2)
-    expect(comparison.rightShift).toBe(comparison.chat.band / 2)
+    const cardShare = 0.8
+    expect(comparison.leftShift).toBeCloseTo(comparison.chat.band * (1 - cardShare) / 2, 1)
+    expect(comparison.rightShift).toBeCloseTo(comparison.chat.band * (1 + cardShare) / 2, 1)
+    expect(comparison.widthShift).toBeCloseTo(comparison.chat.band * cardShare, 1)
     // Restoring the sheet restores the compensation, so the control cannot leak
     // into the remaining measurements.
     const restored = await compareTabs(page)

@@ -1,4 +1,4 @@
-- button "New session"
+- text: Luozy 特供版 0.1.0-rc.5
 - button "Collapse sidebar":
   - img
 - button "New session":

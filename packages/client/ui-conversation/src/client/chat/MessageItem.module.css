@@ -14,10 +14,11 @@
   align-items: flex-end;
   gap: 8px;
   min-width: 0;
-  max-width: min(525px, 82%);
+  /* The user bubble occupies 50% of the message column, no fixed cap. */
+  width: 50%;
 }
 .bubble {
-  /* 525px cap inside the 736 column; percentage keeps narrow windows sane. */
+  /* Fills the 50%-wide stack. */
   max-width: 100%;
   background: var(--dsw-specific-bubble);
   border-radius: 22px;

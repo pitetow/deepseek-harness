@@ -32,6 +32,6 @@
 - Trajectory: scrollbar-gutter auto, overflow hidden/auto
 - Trajectory scroller scrolls: false
 - Trajectory reserved band: 0px
-- input card left edge moves between tabs: 4px
-- input card right edge moves between tabs: 4px
-- input card width changes between tabs: 0px
+- input card left edge moves between tabs: 0.796875px
+- input card right edge moves between tabs: 7.1875px
+- input card width changes between tabs: 6.390625px

@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { resolvePwshPath } from './packages/shell/pwsh-local/src/resolve.ts'
@@ -89,6 +90,11 @@ const testIncludes = [
   'scripts/**/*.spec.ts',
 ]
 
+// Version injected into client unit specs; the tsdown client bundle injects
+// the same identifier for production (ui-sidebar edition badge).
+const ROOT_PACKAGE = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version?: string }
+const DSH_VERSION = ROOT_PACKAGE.version ?? '0.0.0'
+
 // The instrumented coverage gate sets this env; the exempt heavy suites then
 // run beside it uninstrumented (membership contract in scripts/coverage-exempt.ts).
 // A set-but-not-'1' value is a misconfiguration, not a silent no-op.
@@ -126,6 +132,7 @@ export default defineConfig({
     projects: [
       {
         plugins: [pathsPlugin(), standardDecoratorPlugin()],
+        define: { __DSH_VERSION__: JSON.stringify(DSH_VERSION) },
         test: {
           name: 'thread-safe',
           execArgv: vitestExecArgv,
@@ -144,6 +151,7 @@ export default defineConfig({
       },
       {
         plugins: [pathsPlugin(), standardDecoratorPlugin()],
+        define: { __DSH_VERSION__: JSON.stringify(DSH_VERSION) },
         test: {
           name: 'process-bound',
           execArgv: vitestExecArgv,

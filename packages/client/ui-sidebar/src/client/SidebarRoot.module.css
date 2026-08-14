@@ -107,21 +107,42 @@
   justify-content: flex-start;
 }
 
-/* Brand group (figma I133:7632): the full wordmark rides the text ink
-   (figma flows: the main-screen instance is black; blue is brand
-   emphasis only). A button only in behavior (New Session shortcut): the
-   pointer cursor is the sole affordance — no hover chrome on the mark. */
-.brand {
+/* Brand group (figma I133:7632 family): the full wordmark rides the text ink
+   (figma flows: the main-screen instance is black; blue is brand emphasis
+   only), with the edition badge stacked beneath. Decorative brand art with
+   no action — New Session is the dedicated capsule below. */
+.brandGroup {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  overflow: hidden;
+}
+
+/* The wordmark mark itself. */
+.brand {
   display: inline-flex;
   align-items: center;
   overflow: hidden;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
+}
+
+/* "Luozy 特供版 <version>": brand-blue gradient bold edition badge. */
+.editionBadge {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, var(--dsw-static-deepseek-400), var(--dsw-static-deepseek-600));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .iconButton {

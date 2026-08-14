@@ -96,4 +96,4 @@
   - img
 - button "0% of context used"
 - button "Send message" [disabled]
-- text: 3 turns · 7 steps LLM {{duration}} · Tool call {{duration}} Cache hit 77% Input 66.5K tok · Output 318 tok
+- text: in workspace 3 turns · 7 steps LLM {{duration}} · Tool call {{duration}} Cache hit 77% 66.8K tok total

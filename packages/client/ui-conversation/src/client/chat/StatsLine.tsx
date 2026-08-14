@@ -2,9 +2,9 @@
 // Mounted on 'conversation.composer.dock' so it sticks with the composer in the
 // active conversation scrollport (see ConversationRoot data-conversation-scroll).
 
-import { Fragment, memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { Tooltip } from '@deepseek-ai/dsh-client-ui-primitives'
-import type { ConversationSnapshot, UseProjection } from '@deepseek-ai/dsh-client-runtime/client'
+import type { ConversationSnapshot, SessionId, SessionListState, UseProjection } from '@deepseek-ai/dsh-client-runtime/client'
 import type { SnapshotSelectorHook } from '@deepseek-ai/dsh-client-ui-slots'
 // Type-only: merges the sessionStats key into SessionProjectionMap for useProjection.
 import type {} from '@deepseek-ai/dsh-session-stats/client'
@@ -12,6 +12,7 @@ import type { ContextPressureProjection, TokenUsageProjection } from '@deepseek-
 import type { ComposerBarProps } from '../contract/slots.ts'
 import { formatTokensPerSecond } from './message-chrome.ts'
 import { assistantStepReading } from './turn-metrics.ts'
+import { estimateSessionCostYuan, formatBalance, formatYuan, sessionModel, totalSessionTokens } from '../session-cost.ts'
 import css from './StatsLine.module.css'
 
 interface WindowStats {
@@ -155,12 +156,16 @@ export function contextOccupancy(
 /** Props: the conversation-snapshot selector plus the projection read seat. */
 export interface StatsLineProps {
   useSession: SnapshotSelectorHook<ConversationSnapshot>
+  /** Sessions store for the owning session's summary (cwd). */
+  useSessions: SnapshotSelectorHook<SessionListState>
+  /** The owning session's id; absent before a session is chosen. */
+  sessionId: SessionId | undefined
   useProjection: UseProjection
   /** The owning dock's locale seat. */
   t: ComposerBarProps['t']
 }
 
-export const StatsLine = memo(function StatsLine({ useSession, useProjection, t }: StatsLineProps) {
+export const StatsLine = memo(function StatsLine({ useSession, useSessions, sessionId, useProjection, t }: StatsLineProps) {
   const settledNodes = useSession(s => s.chat.legacy.nodes)
   const usage = useProjection('tokenUsage')
   // Every figure rides the durable sessionStats projection, so paging and
@@ -169,9 +174,35 @@ export const StatsLine = memo(function StatsLine({ useSession, useProjection, t 
   // while no projection value is served.
   const projected = useProjection('sessionStats')
   const stats = useMemo(() => projected ?? deriveStats(settledNodes), [projected, settledNodes])
+  const cwd = useSessions(s => sessionId === undefined ? undefined : s.byId[sessionId]?.cwd)
+  const model = useMemo(() => sessionModel(settledNodes), [settledNodes])
+  const totalTokens = usage === undefined ? 0 : totalSessionTokens(usage)
+  const cost = useMemo(
+    () => usage === undefined ? undefined : estimateSessionCostYuan(usage, Date.now(), model),
+    [usage, model],
+  )
+  // Account balance from the host `/api/balance` route, refetched after every
+  // completed turn; a failure or unavailable platform leaves the seat off.
+  const [balance, setBalance] = useState<{ balance?: number; currency?: string } | undefined>(undefined)
+  useEffect(() => {
+    let cancelled = false
+    const url = new URL('/api/balance', window.location.href).href
+    fetch(url, { headers: { Accept: 'application/json' } })
+      .then(response => response.json())
+      .then((payload: { isAvailable?: boolean; balance?: number; currency?: string }) => {
+        if (cancelled) return
+        setBalance(payload.isAvailable === true ? payload : undefined)
+      })
+      // Swallows transport failures: the balance seat simply stays off.
+      .catch(() => { if (!cancelled) setBalance(undefined) })
+    return () => { cancelled = true }
+  }, [stats.turns])
   // Pipe-separated groups (figma stats strip); a group with no data drops out whole.
   const groups: string[] = []
   if (stats.steps > 0) {
+    if (cwd !== undefined && cwd !== '') {
+      groups.push(t('stats.cwd', { path: cwd.split('/').filter(Boolean).pop() ?? cwd }))
+    }
     groups.push(t('stats.counts', { turns: stats.turns, steps: stats.steps }))
     const durations: string[] = []
     if (stats.llmMs > 0) durations.push(t('stats.llm', { duration: formatDuration(stats.llmMs) }))
@@ -198,10 +229,11 @@ export const StatsLine = memo(function StatsLine({ useSession, useProjection, t 
     && (billedInputTokens(usage) > 0 || usage.outputTokens > 0)) {
     const cacheHit = cacheHitPercent(usage)
     if (cacheHit !== null) groups.push(t('stats.cacheHit', { percent: cacheHit }))
-    groups.push(t('stats.tokens', {
-      input: formatTokens(billedInputTokens(usage)),
-      output: formatTokens(usage.outputTokens),
-    }))
+    groups.push(t('stats.totalTokens', { tokens: formatTokens(totalTokens) }))
+    if (cost !== undefined) groups.push(t('stats.cost', { cost: formatYuan(cost) }))
+    if (balance?.balance !== undefined) {
+      groups.push(t('stats.balance', { amount: formatBalance(balance.balance, balance.currency) }))
+    }
   }
   const line = groups.join(' | ')
   // The row elides with ellipsis when overlong; a delayed hover tooltip carries

@@ -32,13 +32,11 @@
   min-height: auto;
 }
 
-/* Message column: shared chat width (ConversationRoot --dsh-chat-content-width),
-   centered on the same axis as the input box (which caps at chat + 16px); the
-   scroller itself stays full-bleed. */
+/* Message column: full width of the scroller's content box (the input card
+   keeps its own narrower --dsh-chat-content-width axis); the scroller itself
+   stays full-bleed. */
 .column {
-  max-width: var(--dsh-chat-content-width);
   width: 100%;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -158,7 +156,6 @@
   height: 0;
   display: flex;
   justify-content: flex-end;
-  padding-right: max(0px, calc((100% - var(--dsh-chat-content-width)) / 2));
   pointer-events: none;
 }
 

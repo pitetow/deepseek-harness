@@ -119,6 +119,11 @@
         host: !!js ctx.webStartup.host ?? '127.0.0.1'
         port: !!js ctx.webStartup.port ?? 3080
 
+    # Account balance for the status bar: serves GET /api/balance, reusing the
+    # provider credential key (DEEPSEEK_API_KEY) — no separate configuration.
+    - id: account-balance
+      name: '@deepseek-ai/dsh-host-account-balance'
+
     # Web glue owned by this bundle: resolves the built frontend dist (an
     # assembly fact of dsh-web-app, never user config), mounts the
     # frontend-static fallback owner, registers the web-surface prompt
