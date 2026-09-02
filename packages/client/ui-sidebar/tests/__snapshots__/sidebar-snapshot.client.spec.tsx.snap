@@ -6,45 +6,42 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
   style="display: contents;"
 >
   <div
-    class="root fading quietBars"
-    style="width: 300px;"
+    class="root collapsed railIn quietBars"
+    style=""
   >
     <div
       class="logoRow"
     >
-      <div
-        class="brandGroup wide"
-      >
-        <div
-          class="brand"
-        >
-          <svg
-            aria-hidden="true"
-            data-content="951274b9"
-            fill="none"
-            height="24"
-            viewBox="0 0 182 24"
-            width="182"
-          />
-        </div>
-        <span
-          class="editionBadge"
-        >
-          Luozy 特供版 0.1.0-rc.5
-        </span>
-      </div>
       <button
         aria-label="Open sidebar"
         class="iconButton toggle"
         type="button"
       >
+        <span
+          aria-hidden="true"
+          class="railMark"
+        >
+          <div
+            data-slot="sidebar.brand.mark"
+            style="display: contents;"
+          >
+            <svg
+              aria-hidden="true"
+              data-content="965fe321"
+              fill="none"
+              height="17.6580310880829"
+              viewBox="0 0 23.16 17.04"
+              width="24"
+            />
+          </div>
+        </span>
         <svg
           class="panelIcon"
           data-content="35f95b0c"
           fill="none"
-          height="16"
+          height="18"
           viewBox="0 0 16 16"
-          width="16"
+          width="18"
           xmlns="http://www.w3.org/2000/svg"
         />
       </button>
@@ -57,16 +54,11 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
       <svg
         data-content="c0ce4dcc"
         fill="none"
-        height="14"
+        height="18"
         viewBox="0 0 16 16"
-        width="14"
+        width="18"
         xmlns="http://www.w3.org/2000/svg"
       />
-      <span
-        class="newSessionLabel wide"
-      >
-        New Session
-      </span>
     </button>
     <div
       class="regionArea"
@@ -100,7 +92,7 @@ exports[`sidebar shell snapshots > renders the collapsed rail after the crossfad
 </div>
 `;
 
-exports[`sidebar shell snapshots > renders the expanded column (brand mark, capsule, empty holes) 1`] = `
+exports[`sidebar shell snapshots > renders the expanded column (wordmark, capsule, empty holes) 1`] = `
 <div
   data-slot="sidebar"
   style="display: contents;"
@@ -112,27 +104,53 @@ exports[`sidebar shell snapshots > renders the expanded column (brand mark, caps
     <div
       class="logoRow"
     >
-      <div
-        class="brandGroup wide"
+      <button
+        aria-label="New session"
+        class="brand wide"
+        type="button"
       >
-        <div
-          class="brand"
-        >
-          <svg
-            aria-hidden="true"
-            data-content="951274b9"
-            fill="none"
-            height="24"
-            viewBox="0 0 182 24"
-            width="182"
-          />
-        </div>
         <span
-          class="editionBadge"
+          aria-hidden="true"
+          class="brandIdentity"
         >
-          Luozy 特供版 0.1.0-rc.5
+          <span
+            class="brandMark"
+          >
+            <div
+              data-slot="sidebar.brand.mark"
+              style="display: contents;"
+            >
+              <svg
+                aria-hidden="true"
+                data-content="965fe321"
+                fill="none"
+                height="17.6580310880829"
+                viewBox="0 0 23.16 17.04"
+                width="24"
+              />
+            </div>
+          </span>
+          <span
+            class="brandName"
+          >
+            <div
+              data-slot="sidebar.brand.name"
+              style="display: contents;"
+            >
+              <span
+                class="fallbackBrandName"
+              >
+                DSH Local Build
+              </span>
+              <span
+                class="buildRevision"
+              >
+                abc1234
+              </span>
+            </div>
+          </span>
         </span>
-      </div>
+      </button>
       <button
         aria-label="Collapse sidebar"
         class="iconButton toggle"
@@ -212,27 +230,53 @@ exports[`sidebar shell snapshots > renders the expanded column in the default lo
     <div
       class="logoRow"
     >
-      <div
-        class="brandGroup wide"
+      <button
+        aria-label="新建会话"
+        class="brand wide"
+        type="button"
       >
-        <div
-          class="brand"
-        >
-          <svg
-            aria-hidden="true"
-            data-content="951274b9"
-            fill="none"
-            height="24"
-            viewBox="0 0 182 24"
-            width="182"
-          />
-        </div>
         <span
-          class="editionBadge"
+          aria-hidden="true"
+          class="brandIdentity"
         >
-          Luozy 特供版 0.1.0-rc.5
+          <span
+            class="brandMark"
+          >
+            <div
+              data-slot="sidebar.brand.mark"
+              style="display: contents;"
+            >
+              <svg
+                aria-hidden="true"
+                data-content="965fe321"
+                fill="none"
+                height="17.6580310880829"
+                viewBox="0 0 23.16 17.04"
+                width="24"
+              />
+            </div>
+          </span>
+          <span
+            class="brandName"
+          >
+            <div
+              data-slot="sidebar.brand.name"
+              style="display: contents;"
+            >
+              <span
+                class="fallbackBrandName"
+              >
+                DSH Local Build
+              </span>
+              <span
+                class="buildRevision"
+              >
+                abc1234
+              </span>
+            </div>
+          </span>
         </span>
-      </div>
+      </button>
       <button
         aria-label="收起侧边栏"
         class="iconButton toggle"

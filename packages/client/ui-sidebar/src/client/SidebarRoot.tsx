@@ -18,12 +18,9 @@
 import { useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import {
-  BrandWordmark, FishLogo,
-  IconNewChatOutline16, IconPanelLeftOutline16,
-  Tooltip,
+  FishLogo, IconNewChatOutline16, IconPanelLeftOutline16, Tooltip,
 } from '@deepseek-ai/dsh-client-ui-primitives'
 import type { SidebarRootComponentProps } from './contract/slots.ts'
-import { DSH_VERSION } from './version.ts'
 import css from './SidebarRoot.module.css'
 
 /** Wide-content unmount delay; matches the 150ms wide-content fade-out. */
@@ -129,18 +126,33 @@ export function SidebarRoot({
       onPointerLeave={() => { armLinger() }}
     >
       <div className={css.logoRow}>
-        {/* Expanded, the wordmark is decorative brand art (New Session is the
-            dedicated capsule below); the collapsed rail's logo is the expand
-            toggle below instead. */}
+        {/* Expanded, the brand doubles as a New Session shortcut; the
+            collapsed rail's logo is the expand toggle below instead. */}
         {wide && (
-          <div className={clsx(css.brandGroup, css.wide)}>
-            <div className={css.brand}>
-              <BrandWordmark />
-            </div>
-            <span className={css.editionBadge}>
-              {`Luozy 特供版 ${DSH_VERSION}`}
+          <button
+            type="button"
+            className={clsx(css.brand, css.wide)}
+            aria-label={t('session.new.label')}
+            onClick={() => { startSession() }}
+          >
+            <span className={css.brandIdentity} aria-hidden="true">
+              <span className={css.brandMark}>
+                {renderSlot('sidebar.brand.mark', { size: 24 }, { fallback: <FishLogo size={24} /> })}
+              </span>
+              <span className={css.brandName}>
+                {renderSlot('sidebar.brand.name', {}, {
+                  fallback: (
+                    <>
+                      <span className={css.fallbackBrandName}>DSH Local Build</span>
+                      {process.env.DSH_CLIENT_COMMIT_HASH
+                        ? <span className={css.buildRevision}>{process.env.DSH_CLIENT_COMMIT_HASH}</span>
+                        : null}
+                    </>
+                  ),
+                })}
+              </span>
             </span>
-          </div>
+          </button>
         )}
         {/* Rail resting state is the whale mark; hovering swaps in the panel
             icon (the expand affordance, figma sidebar-hover flow). */}
@@ -151,7 +163,11 @@ export function SidebarRoot({
             aria-label={collapsed ? t('toggle.open') : t('toggle.collapse')}
             onClick={() => { toggleSidebar() }}
           >
-            {!wide && <FishLogo className={css.railFish} size={24} />}
+            {!wide && (
+              <span className={css.railMark} aria-hidden="true">
+                {renderSlot('sidebar.brand.mark', { size: 24 }, { fallback: <FishLogo size={24} /> })}
+              </span>
+            )}
             {/* Rail icons render at 18 (figma rail spec); expanded keeps the glyph-native sizes. */}
             <IconPanelLeftOutline16 className={css.panelIcon} size={wide ? 16 : 18} />
           </button>
