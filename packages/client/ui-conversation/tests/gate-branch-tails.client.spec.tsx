@@ -94,8 +94,6 @@ describe('render branch tails', () => {
       <StatsLine
         t={t}
         useSession={bindSnapshotSelector(source) as unknown as UseSession<ConversationSnapshot>}
-        useSessions={(() => undefined) as never}
-        sessionId={undefined}
         useProjection={() => undefined}
       />,
     )
